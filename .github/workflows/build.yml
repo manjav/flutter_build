@@ -2,7 +2,7 @@ name: Build Android
 on:
   push:
     tags:
-    - 'v[0-9]+.[0-9]+.[0-9]+*' # tag pattern on pub.dev: 'v{{version}'
+    - 'v[0-9]+.[0-9]+.[0-9]+*' 
 
 jobs:
   build:
@@ -24,4 +24,4 @@ jobs:
         with:
           name: release-apk
           # Try running the build locally with the build command to be sure of this path
-          path: build/app/outputs/flutter-apk/app-dev-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
