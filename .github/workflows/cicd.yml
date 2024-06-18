@@ -12,7 +12,26 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    needs: test
+    permissions: write-all
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: android-apk
+            os: ubuntu-latest
+            targets: apk
+
+          - platform: android-aab
+            os: ubuntu-latest
+            targets: aab
+
+          # - platform: ios
+          #   os: macos-13
+          #   aarch: universal
+          #   filename: LifeTalk-ios
+          #   targets: ipa
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - name: Check java found
@@ -54,6 +73,7 @@ jobs:
         shell: bash
             
       - name: Decode keystore and create jks and properties file for signing the app
+        if: ${{ startsWith(matrix.platform,'android') }}
         shell: bash
         run: |
           echo "${{ secrets.ANDROID_SIGNING_KEY }}" | base64 --decode > app/keystore.jks
@@ -63,17 +83,20 @@ jobs:
           echo "keyPassword=${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}" >> key.properties
         working-directory: ${{ env.WORKING_DIRECTORY }}/android
 
-      - name: Build APK
+      - name: Build ${{ matrix.platform }}
+        if: matrix.platform == 'android-apk'
         run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose  
         shell: bash
         working-directory: ${{ env.WORKING_DIRECTORY }}
       
-      # - name: Build AAB
+      # - name: Build ${{ matrix.platform }}
+      #   if: matrix.platform == 'android-aab'
       #   run: flutter build appbundle  --dart-define release=google-play
       #   shell: bash
       #   working-directory: ${{ env.WORKING_DIRECTORY }}
         
       - name: Copy to out Android APK
+        if: matrix.platform == 'android-apk'
         run: |
           mkdir out
           ls -R ./build/app/outputs
@@ -83,6 +106,7 @@ jobs:
           cp ./build/app/outputs/flutter-apk/app-release.apk out/${{ env.TARGET_NAME }}-universal.apk || echo "no universal apk"
 
       # - name: Copy to out Android AAB
+      #   if: matrix.platform == 'android-aab'
       #   run: |
       #     mkdir out
       #     ls -R ./build/app/outputs
@@ -91,5 +115,6 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: release
+          name: ${{matrix.platform}}
           path: ./out
+          retention-days: 1
