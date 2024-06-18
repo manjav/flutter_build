@@ -10,58 +10,58 @@ env:
   WORKING_DIRECTORY: ./
 
 jobs:
-  using: "composite"
-  runs-on: ubuntu-latest
-  steps:
-    - name: Check java found
-      id: check_java
-      shell: bash
-      run: |
-        if java --version; then
-            echo "installed=true" >> "$GITHUB_OUTPUT"
-        else
-            echo "installed=false" >> "$GITHUB_OUTPUT"
-        fi
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check java found
+        id: check_java
+        shell: bash
+        run: |
+          if java --version; then
+              echo "installed=true" >> "$GITHUB_OUTPUT"
+          else
+              echo "installed=false" >> "$GITHUB_OUTPUT"
+          fi
 
-    - name: Install java
-      if: steps.check_java.outputs.installed == 'false'
-      uses: actions/setup-java@v3
-      with:
-        distribution: "zulu"
-        java-version: "17.x"
-        cache: "gradle"
+      - name: Install java
+        if: steps.check_java.outputs.installed == 'false'
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: "17.x"
+          cache: "gradle"
 
-    - name: Check flutter found
-      id: check_flutter
-      shell: bash
-      run: |
-        if flutter --version; then
-            echo "installed=true" >> "$GITHUB_OUTPUT"
-        else
-            echo "installed=false" >> "$GITHUB_OUTPUT"
-        fi
+      - name: Check flutter found
+        id: check_flutter
+        shell: bash
+        run: |
+          if flutter --version; then
+              echo "installed=true" >> "$GITHUB_OUTPUT"
+          else
+              echo "installed=false" >> "$GITHUB_OUTPUT"
+          fi
 
-    - name: Setup flutter
-      if: steps.check_flutter.outputs.installed == 'false'
-      uses: subosito/flutter-action@v2
-      with:
-        channel: "stable"
-        cache: true
+      - name: Setup flutter
+        if: steps.check_flutter.outputs.installed == 'false'
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
 
-    - run: flutter --version
-      shell: bash
-          
-    - name: Decode keystore and create jks and properties file for signing the app
-      shell: bash
-      run: |
-        echo "${{ secrets.ANDROID_SIGNING_KEY }}" | base64 --decode > app/keystore.jks
-        echo "storeFile=keystore.jks" >> key.properties
-        echo "storePassword=${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}" >> key.properties
-        echo "keyAlias=${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}" >> key.properties
-        echo "keyPassword=${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}" >> key.properties
-      working-directory: ${{ env.WORKING_DIRECTORY }}/android
+      - run: flutter --version
+        shell: bash
+            
+      - name: Decode keystore and create jks and properties file for signing the app
+        shell: bash
+        run: |
+          echo "${{ secrets.ANDROID_SIGNING_KEY }}" | base64 --decode > app/keystore.jks
+          echo "storeFile=keystore.jks" >> key.properties
+          echo "storePassword=${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}" >> key.properties
+          echo "keyAlias=${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}" >> key.properties
+          echo "keyPassword=${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}" >> key.properties
+        working-directory: ${{ env.WORKING_DIRECTORY }}/android
 
-    - name: Build
-      run: ${{ inputs.build-cmd }}
-      shell: bash
-      working-directory: ${{ env.WORKING_DIRECTORY }}
+      - name: Build
+        run: ${{ inputs.build-cmd }}
+        shell: bash
+        working-directory: ${{ env.WORKING_DIRECTORY }}
