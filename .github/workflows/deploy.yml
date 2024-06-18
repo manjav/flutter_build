@@ -3,7 +3,8 @@ name: Build
 on:
   push:
     tags:
-    - 'r[0-9]+.[0-9]+.[0-9]+*' 
+    - 'r[0-9]+.[0-9]+.[0-9]+*'
+    - 'r[0-9]+*' 
 
 env:
   IS_GITHUB_ACTIONS: 1
