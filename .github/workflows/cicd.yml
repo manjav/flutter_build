@@ -8,6 +8,7 @@ on:
 
 env:
   WORKING_DIRECTORY: ./
+  TARGET_NAME: "LifeTalk"
 
 jobs:
   build:
@@ -62,7 +63,33 @@ jobs:
           echo "keyPassword=${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}" >> key.properties
         working-directory: ${{ env.WORKING_DIRECTORY }}/android
 
-      - name: Build
-        run: ${{ inputs.build-cmd }}
+      - name: Build APK
+        run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose  
         shell: bash
         working-directory: ${{ env.WORKING_DIRECTORY }}
+      
+      # - name: Build AAB
+      #   run: flutter build appbundle  --dart-define release=google-play
+      #   shell: bash
+      #   working-directory: ${{ env.WORKING_DIRECTORY }}
+        
+      - name: Copy to out Android APK
+        run: |
+          mkdir out
+          ls -R ./build/app/outputs
+          cp ./build/app/outputs/flutter-apk/*arm64-v8a*.apk out/${{ TARGET_NAME }}-arm64.apk || echo "no arm64 apk"
+          cp ./build/app/outputs/flutter-apk/*armeabi-v7a*.apk out/${{ TARGET_NAME }}-arm7.apk || echo "no arm7 apk"
+          cp ./build/app/outputs/flutter-apk/*x86_64*.apk out/${{ TARGET_NAME }}-x86_64.apk || echo "no x64 apk"
+          cp ./build/app/outputs/flutter-apk/app-release.apk out/${{ TARGET_NAME }}-universal.apk || echo "no universal apk"
+
+      - name: Copy to out Android AAB
+        run: |
+          mkdir out
+          ls -R ./build/app/outputs
+          cp ./build/app/outputs/bundle/release/app-release.aab out/${{ TARGET_NAME }}-market.aab || echo "no aab"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ {matrix.platform}}
+          path: ./out
