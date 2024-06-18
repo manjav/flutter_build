@@ -87,7 +87,7 @@ jobs:
       
       - name: Build ${{ matrix.platform }}
         if: ${{ startsWith(matrix.platform,'android') }}
-        run: matrix.cmd
+        run: ${{ matrix.cmd }}
         shell: bash
         working-directory: ${{ env.WORKING_DIRECTORY }}
         
