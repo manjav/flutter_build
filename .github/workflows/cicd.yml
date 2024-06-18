@@ -21,10 +21,12 @@ jobs:
           - platform: android-apk
             os: ubuntu-latest
             targets: apk
+            cmd: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose
 
           - platform: android-aab
             os: ubuntu-latest
             targets: aab
+            cmd: flutter build appbundle  --dart-define release=google-play
 
           # - platform: ios
           #   os: macos-13
@@ -82,21 +84,15 @@ jobs:
           echo "keyAlias=${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}" >> key.properties
           echo "keyPassword=${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}" >> key.properties
         working-directory: ${{ env.WORKING_DIRECTORY }}/android
-
-      - name: Build ${{ matrix.platform }}
-        if: matrix.platform == 'android-apk'
-        run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose  
-        shell: bash
-        working-directory: ${{ env.WORKING_DIRECTORY }}
       
       - name: Build ${{ matrix.platform }}
-        if: ${{ matrix.platform == 'android-aab' }}
-        run: flutter build appbundle  --dart-define release=google-play
+        if: ${{ startsWith(matrix.platform,'android') }}
+        run: matrix.cmd
         shell: bash
         working-directory: ${{ env.WORKING_DIRECTORY }}
         
       - name: Copy to out Android APK
-        if: ${{ matrix.platform == 'android-apk' }}
+        if: ${{ startsWith(matrix.platform,'android') }}
         run: |
           mkdir out
           ls -R ./build/app/outputs
@@ -104,13 +100,8 @@ jobs:
           cp ./build/app/outputs/flutter-apk/*armeabi-v7a*.apk out/${{ env.TARGET_NAME }}-arm7.apk || echo "no arm7 apk"
           cp ./build/app/outputs/flutter-apk/*x86_64*.apk out/${{ env.TARGET_NAME }}-x86_64.apk || echo "no x64 apk"
           cp ./build/app/outputs/flutter-apk/app-release.apk out/${{ env.TARGET_NAME }}-universal.apk || echo "no universal apk"
-
-      - name: Copy to out Android AAB
-        if: ${{ matrix.platform == 'android-aab' }}
-        run: |
-          # mkdir out
-          ls -R ./build/app/outputs
           cp ./build/app/outputs/bundle/release/app-release.aab out/${{ env.TARGET_NAME }}-market.aab || echo "no aab"
+
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
