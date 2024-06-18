@@ -79,8 +79,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2.16.0 #issue with 2.13
         with:
-          # flutter-version: ${{ env.FLUTTER_VERSION }}
-          flutter-version-file: pubspec.yaml
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          # flutter-version-file: pubspec.yaml
           channel: 'stable'
           cache: true
 
