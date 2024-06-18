@@ -77,19 +77,19 @@ jobs:
         run: |
           mkdir out
           ls -R ./build/app/outputs
-          cp ./build/app/outputs/flutter-apk/*arm64-v8a*.apk out/${{ TARGET_NAME }}-arm64.apk || echo "no arm64 apk"
-          cp ./build/app/outputs/flutter-apk/*armeabi-v7a*.apk out/${{ TARGET_NAME }}-arm7.apk || echo "no arm7 apk"
-          cp ./build/app/outputs/flutter-apk/*x86_64*.apk out/${{ TARGET_NAME }}-x86_64.apk || echo "no x64 apk"
-          cp ./build/app/outputs/flutter-apk/app-release.apk out/${{ TARGET_NAME }}-universal.apk || echo "no universal apk"
+          cp ./build/app/outputs/flutter-apk/*arm64-v8a*.apk out/${{ env.TARGET_NAME }}-arm64.apk || echo "no arm64 apk"
+          cp ./build/app/outputs/flutter-apk/*armeabi-v7a*.apk out/${{ env.TARGET_NAME }}-arm7.apk || echo "no arm7 apk"
+          cp ./build/app/outputs/flutter-apk/*x86_64*.apk out/${{ env.TARGET_NAME }}-x86_64.apk || echo "no x64 apk"
+          cp ./build/app/outputs/flutter-apk/app-release.apk out/${{ env.TARGET_NAME }}-universal.apk || echo "no universal apk"
 
       - name: Copy to out Android AAB
         run: |
           mkdir out
           ls -R ./build/app/outputs
-          cp ./build/app/outputs/bundle/release/app-release.aab out/${{ TARGET_NAME }}-market.aab || echo "no aab"
+          cp ./build/app/outputs/bundle/release/app-release.aab out/${{ env.TARGET_NAME }}-market.aab || echo "no aab"
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ {matrix.platform}}
-          path: ./out
+      # - name: Upload Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ${{ matrix.platform }}
+      #     path: ./out
