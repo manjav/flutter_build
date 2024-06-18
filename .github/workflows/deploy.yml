@@ -106,10 +106,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: 7.5
-      - name: Setup dependencies
-        run: |
-          make ${{ matrix.platform }}-install-dependencies
 
+      # - name: Setup dependencies
+      #   run: |
+      #     make ${{ matrix.platform }}-install-dependencies
 
       - name: Setup Android Signing Properties
         if: ${{ inputs.upload-artifact && startsWith(matrix.platform,'android') }}
