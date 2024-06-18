@@ -13,9 +13,9 @@ env:
   NDK_VERSION: r26d
   UPLOAD_ARTIFACT: "${{ inputs.upload-artifact }}"
   TAG_NAME: "${{ inputs.tag-name }}"
-  TARGET_NAME_apk: "LafeTalk-Android"
-  TARGET_NAME_aab: "LafeTalk-Android"
-  TARGET_NAME_ipa: "LafeTalk-iOS"
+  TARGET_NAME_apk: "LifeTalk-Android"
+  TARGET_NAME_aab: "LifeTalk-Android"
+  TARGET_NAME_ipa: "LifeTalk-iOS"
 
 jobs:
   test:
@@ -58,7 +58,7 @@ jobs:
           # - platform: ios
           #   os: macos-13
           #   aarch: universal
-          #   filename: LafeTalk-ios
+          #   filename: LifeTalk-ios
           #   targets: ipa
     runs-on: ${{ matrix.os }}
     steps:
@@ -120,6 +120,17 @@ jobs:
           echo "keyPassword=${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}" >> android/key.properties
 
+
+      - name: Prepare for ${{ matrix.platform }}
+        run: |
+          make ${{ matrix.platform }}-prepare
+          tree
+      - name: Build ${{ matrix.platform }}
+        # env:
+        #   SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: |
+          make ${{ matrix.platform }}-release
+
               
       - name: Copy to out Android APK
         if: matrix.platform == 'android-apk'
@@ -136,7 +147,7 @@ jobs:
         run: |
           mkdir out
           ls -R ./build/app/outputs
-          cp ./build/app/outputs/bundle/release/app-release.aab out/LafeTalk-android-market.aab || echo "no aab"
+          cp ./build/app/outputs/bundle/release/app-release.aab out/LifeTalk-android-market.aab || echo "no aab"
 
       - name: Upload Artifact
         if: env.UPLOAD_ARTIFACT == 'true'
@@ -185,7 +196,7 @@ jobs:
       - name: prepare_release_message
         run: |
           pip install gitchangelog pystache mustache markdown
-          prelease=$(curl --silent "https://api.github.com/repos/LafeTalk/LafeTalk-next/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
+          prelease=$(curl --silent "https://api.github.com/repos/LifeTalk/LifeTalk-next/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
           current="${{ github.ref_name }}"
           sed 's|RELEASE_TAG|${{ env.TAG_NAME }}|g' ./.github/release_message.md > release.md
           echo -e "\n\n<details markdown=1><summary>All changes from $current to the latest commit:</summary>\n\n">>release.md
@@ -222,7 +233,7 @@ jobs:
           ls -R ./out
           ls -R ./.github/
           ls -R ./.git/
-          mv out/LafeTalk-android-market.aab  LafeTalk-android-market.aab
+          mv out/LifeTalk-android-market.aab  LifeTalk-android-market.aab
 
       - name: prepare_release_message
         run: |
@@ -246,9 +257,9 @@ jobs:
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: service_account.json
-          packageName: app.LafeTalk.com
+          packageName: app.LifeTalk.com
           releaseName: ${{ env.TAG_NAME }}
-          releaseFiles: ./LafeTalk-android-market.aab
+          releaseFiles: ./LifeTalk-android-market.aab
           track: 'beta'
 
 
@@ -273,13 +284,13 @@ jobs:
 
   #     - uses: Apple-Actions/download-provisioning-profiles@v1
   #       with:
-  #         bundle-id: app.LafeTalk.com
+  #         bundle-id: app.LifeTalk.com
   #         issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
   #         api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
   #         api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
   #     - uses: Apple-Actions/download-provisioning-profiles@v1
   #       with:
-  #         bundle-id: app.LafeTalk.com.SingBoxPacketTunnel
+  #         bundle-id: app.LifeTalk.com.SingBoxPacketTunnel
   #         issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
   #         api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
   #         api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
@@ -293,7 +304,7 @@ jobs:
 
   #     - uses: Apple-Actions/upload-testflight-build@v1
   #       with:
-  #         app-path: 'out/LafeTalk-iOS.ipa' 
+  #         app-path: 'out/LifeTalk-iOS.ipa' 
   #         issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
   #         api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
   #         api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
