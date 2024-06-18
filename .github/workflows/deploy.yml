@@ -121,15 +121,26 @@ jobs:
           echo "keyAlias=${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}" >> android/key.properties
 
 
-      - name: Prepare for ${{ matrix.platform }}
-        run: |
-          make ${{ matrix.platform }}-prepare
-          tree
       - name: Build ${{ matrix.platform }}
-        # env:
-        #   SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-        run: |
-          make ${{ matrix.platform }}-release
+        if: matrix.platform == 'android-apk'
+        run: flutter build apk --release --target-platform android-arm,android-arm64,android-x64 --split-per-abi --verbose ls -R build/app/outputs
+        shell: bash
+        
+      - name: Build ${{ matrix.platform }}
+        if: matrix.platform == 'android-aab'
+        run: flutter build appbundle --dart-define release=google-play ls -R build/app/outputs
+        shell: bash
+
+
+      # - name: Prepare for ${{ matrix.platform }}
+      #   run: |
+      #     make ${{ matrix.platform }}-prepare
+      #     tree
+      # - name: Build ${{ matrix.platform }}
+      #   # env:
+      #   #   SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      #   run: |
+      #     make ${{ matrix.platform }}-release
 
               
       - name: Copy to out Android APK
