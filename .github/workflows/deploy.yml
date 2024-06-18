@@ -123,16 +123,14 @@ jobs:
 
       - name: Build ${{ matrix.platform }}
         if: matrix.platform == 'android-apk'
-        run: |
-        flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose  
+        run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose  
 	      ls -R build/app/outputs
         shell: bash
         working-directory: ./
         
       - name: Build ${{ matrix.platform }}
         if: matrix.platform == 'android-aab'
-        run: |
-        flutter build appbundle  --dart-define release=google-play
+        run: flutter build appbundle  --dart-define release=google-play
 	      ls -R build/app/outputs
         shell: bash
         working-directory: ./
