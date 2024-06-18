@@ -89,14 +89,14 @@ jobs:
         shell: bash
         working-directory: ${{ env.WORKING_DIRECTORY }}
       
-      # - name: Build ${{ matrix.platform }}
-      #   if: matrix.platform == 'android-aab'
-      #   run: flutter build appbundle  --dart-define release=google-play
-      #   shell: bash
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
+      - name: Build ${{ matrix.platform }}
+        if: ${{ matrix.platform == 'android-aab' }}
+        run: flutter build appbundle  --dart-define release=google-play
+        shell: bash
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         
       - name: Copy to out Android APK
-        if: matrix.platform == 'android-apk'
+        if: ${{ matrix.platform == 'android-apk' }}
         run: |
           mkdir out
           ls -R ./build/app/outputs
@@ -105,12 +105,12 @@ jobs:
           cp ./build/app/outputs/flutter-apk/*x86_64*.apk out/${{ env.TARGET_NAME }}-x86_64.apk || echo "no x64 apk"
           cp ./build/app/outputs/flutter-apk/app-release.apk out/${{ env.TARGET_NAME }}-universal.apk || echo "no universal apk"
 
-      # - name: Copy to out Android AAB
-      #   if: matrix.platform == 'android-aab'
-      #   run: |
-      #     mkdir out
-      #     ls -R ./build/app/outputs
-      #     cp ./build/app/outputs/bundle/release/app-release.aab out/${{ env.TARGET_NAME }}-market.aab || echo "no aab"
+      - name: Copy to out Android AAB
+        if: ${{ matrix.platform == 'android-aab' }}
+        run: |
+          # mkdir out
+          ls -R ./build/app/outputs
+          cp ./build/app/outputs/bundle/release/app-release.aab out/${{ env.TARGET_NAME }}-market.aab || echo "no aab"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
