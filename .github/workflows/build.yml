@@ -9,9 +9,6 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/checkout@v3
 
       - name: Get version
@@ -19,7 +16,7 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: yq -r '.version' 'pubspec.yaml'
-          
+
       - run: echo ${{ steps.yq.outputs.result }}
 
       - name: Push to Releases
