@@ -2,7 +2,7 @@ name: Build Android
 on:
   push:
     tags:
-    - 'v[0-9]+.[0-9]+.[0-9]+*' 
+    - 'v[0-9]+*' 
 
 jobs:
   build:
@@ -10,17 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-      - uses: cedvdb/action-flutter-build-android@v1
+      - name: Get version
+        id: yq
+        uses: mikefarah/yq@master
         with:
-          keystore-base64: ${{ secrets.ANDROID_RELEASE_KEY }}
-          keystore-password: "${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}"
-          # optionals
-          # build-cmd: flutter build apk --release --flavor dev
-          working-directory: ./
+          cmd: yq -r '.version' 'pubspec.yaml'
           
-      - uses: actions/upload-artifact@v2
-        with:
-          name: release-apk
-          # Try running the build locally with the build command to be sure of this path
-          path: build/app/outputs/flutter-apk/app-release.apk
+      - run: echo ${{ steps.yq.outputs.result }}
+
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
