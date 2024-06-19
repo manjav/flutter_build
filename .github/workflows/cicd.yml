@@ -106,8 +106,8 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "${{ matrix.platform }}/*.*"
-          tag: v2.2.${{github.run_number}}
-          token: ${( secrets.MYGITHUB_TOKEN }}
+          tag: v2.2.${{ github.run_number }}
+          token: ${{ secrets.MYGITHUB_TOKEN }}
 
     # - name: Upload Artifact
     #   uses: actions/upload-artifact@v4
