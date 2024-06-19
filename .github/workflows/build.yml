@@ -20,7 +20,7 @@ jobs:
 
       - name: Check equals tag with version
         if: startsWith("v${{ steps.yq.outputs.result }}", "${{ github.ref_name }}")
-        run: foo
+        run: ...
 
       - run: echo ${{ steps.yq.outputs.result }}
 
