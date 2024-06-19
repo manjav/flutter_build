@@ -19,8 +19,11 @@ jobs:
           cmd: yq -r '.version' 'pubspec.yaml'
 
       - name: Check equals tag with version
-        if: startsWith("v${{ steps.yq.outputs.result }}", "${{ github.ref_name }}")
-        run: ...
+        if: startsWith("v${{ steps.yq.outputs.result }}", "${{ github.ref_name }}") == "false"
+          uses: actions/github-script@v3
+          with:
+            script: |
+              core.setFailed('Pubspec version and tag version must be equal')
 
       - run: echo ${{ steps.yq.outputs.result }}
 
