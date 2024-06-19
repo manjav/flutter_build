@@ -19,8 +19,7 @@ jobs:
           cmd: yq -r '.version' 'pubspec.yaml'
 
       - name: Check equals tag with version
-        # run: exit_with_success # I want to know what command I should write here
-        if: ${{ startsWith("v${{ steps.yq.outputs.result }}", "${{ github.ref_name }}") }}
+        if: startsWith("v${{ steps.yq.outputs.result }}", "${{ github.ref_name }}")
         run: foo
 
       - run: echo ${{ steps.yq.outputs.result }}
