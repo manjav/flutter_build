@@ -44,8 +44,6 @@ jobs:
         with:
           cmd: yq -r '.version' 'pubspec.yaml'
 
-      - run: echo ${{ steps.yq.outputs.result }}
-
       - name: Check java found
         id: check_java
         shell: bash
@@ -101,11 +99,11 @@ jobs:
         shell: bash
         working-directory: ${{ env.WORKING_DIRECTORY }}
          
-      # - name: Build AAB
-      #   # if: ${{ startsWith(matrix.platform,'android') }}
-      #   run: flutter build appbundle  --dart-define release=google-play
-      #   shell: bash
-      #   working-directory: ${{ env.WORKING_DIRECTORY }}
+      - name: Build AAB
+        # if: ${{ startsWith(matrix.platform,'android') }}
+        run: flutter build appbundle  --dart-define release=google-play
+        shell: bash
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         
       # - name: Copy to out 
       #   # if: ${{ startsWith(matrix.platform,'android') }}
@@ -121,4 +119,5 @@ jobs:
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          # artifacts: "./build/app/outputs/apk/release/*.apk,./build/app/outputs/bundle/release/app-release.aab"
+          artifacts: "./build/app/outputs/apk/release/*.apk,./build/app/outputs/bundle/release/app-release.aab"
+          tag: ${{ steps.yq.outputs.result }}
