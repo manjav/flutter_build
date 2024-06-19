@@ -92,11 +92,11 @@ jobs:
         shell: bash
         working-directory: ${{ env.WORKING_DIRECTORY }}
          
-      - name: Build AAB
-        # if: ${{ startsWith(matrix.platform,'android') }}
-        run: flutter build appbundle  --dart-define release=google-play
-        shell: bash
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+      # - name: Build AAB
+      #   # if: ${{ startsWith(matrix.platform,'android') }}
+      #   run: flutter build appbundle  --dart-define release=google-play
+      #   shell: bash
+      #   working-directory: ${{ env.WORKING_DIRECTORY }}
         
       - name: Copy to out 
         # if: ${{ startsWith(matrix.platform,'android') }}
@@ -112,9 +112,8 @@ jobs:
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "out/*.*"
-          tag: v2.2.${{ github.run_number }}
-          token: ${{ secrets.MYGITHUB_TOKEN }}
+          artifacts: "out/*.apk"
+          # bodyFile: "body.md"
 
       # - name: Upload Artifact
       #   uses: actions/upload-artifact@v4
