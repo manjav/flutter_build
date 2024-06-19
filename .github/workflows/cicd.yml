@@ -103,10 +103,11 @@ jobs:
           cp ./build/app/outputs/bundle/release/app-release.aab ${{ matrix.platform }}/${{ env.TARGET_NAME }}-market.aab || echo "no aab"
 
       - name: Push to Releases
-        uses: ncipollo/release-action@v1 with:
-        artifacts: "${{ matrix.platform }}/*.*"
-        tag: v2.2.${{github.run_number}}
-        token: ${( secrets.MYGITHUB_TOKEN }}
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "${{ matrix.platform }}/*.*"
+          tag: v2.2.${{github.run_number}}
+          token: ${( secrets.MYGITHUB_TOKEN }}
 
     # - name: Upload Artifact
     #   uses: actions/upload-artifact@v4
