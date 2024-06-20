@@ -18,10 +18,12 @@ jobs:
         with:
           cmd: yq -r '.version' 'pubspec.yaml'
           
+      - name: Get project version
+        run: echo "PROJECT_VERSION=v${{ steps.yq.outputs.result }}" >> $GITHUB_ENV
       - name: Check equal version
-        run: echo "GITHUB_SHA_SHORT=123" >> $GITHUB_ENV
+        run: echo "IS_EQUAL=startsWith($PROJECT_VERSION, $GITHUB_REF_NAME)" >> $GITHUB_ENV
       - name: Test
-        run: echo $GITHUB_SHA_SHORT
+        run: echo $IS_EQUAL
     
       # VERSIONS_EQUAL: ${{ startsWith("v${{ steps.yq.outputs.result }}", $GITHUB_REF_NAME) }}
       # run: echo "${{ steps.yq.outputs.result }} $GITHUB_REF_NAME"
