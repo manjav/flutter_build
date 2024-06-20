@@ -18,14 +18,14 @@ jobs:
         with:
           cmd: yq -r '.version' 'pubspec.yaml'
           
-      - name: Check version
-        id: result
-        status: ${{ startsWith("v${{ steps.yq.outputs.result }}", $GITHUB_REF_NAME) }}
+      - name: Check equal version
+        id: equal
+        result: ${{ startsWith("v${{ steps.yq.outputs.result }}", $GITHUB_REF_NAME) }}
         run: echo "${{ steps.yq.outputs.result }} $GITHUB_REF_NAME"
 
       - name: Check equals tag with version
-        if:  ${{ result.status == 'false' }}
-        run: echo pubspec version and tag version must be equal
+        if: ${{ steps.equal.result == 'false' }}
+        run: "echo pubspec version and tag version must be equal "${{ steps.equal.result }}"
 
       - name: Push to Releases
         uses: ncipollo/release-action@v1
