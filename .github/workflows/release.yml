@@ -21,9 +21,7 @@ jobs:
       # - name: Get project version
       #   run: echo "PROJECT_VERSION=v${{ steps.yq.outputs.result }}" >> $GITHUB_ENV
         
-      - uses: ./.github/actions/build
-        with:
-          working-directory: ./
+        uses: ./.github/actions/build
 
       # - name: Test1
       #   shell: bash
