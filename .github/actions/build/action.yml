@@ -3,7 +3,19 @@ description: Build Android and iOS
 inputs:
   working-directory:
     description: The root directory of the flutter app within this repository
-    default: ./  
+    default: ./
+  store-base64:
+    description: "keyAlias with which to sign the app"
+    required: true
+  store-pass:
+    description: "The password for the key used to sign the app"
+    required: true
+  key-alias:
+    description: "The alias for the keyAlias"
+    required: true
+  key-pass:
+    description: "The password for the store  used to sign the app"
+    required: true
 
 runs:
   using: "composite"
@@ -49,11 +61,11 @@ runs:
     - name: Decode keystore and create jks and properties file for signing the app
       shell: bash
       run: |
-        echo "${{ secrets.ANDROID_SIGNING_KEY }}" | base64 --decode > app/keystore.jks
+        echo "${{ env.inputs.store-base64 }}" | base64 --decode > app/keystore.jks
         echo "storeFile=keystore.jks" >> key.properties
-        echo "storePassword=${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}" >> key.properties
-        echo "keyAlias=${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}" >> key.properties
-        echo "keyPassword=${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}" >> key.properties
+        echo "storePassword=${{ env.inputs.store-pass }}" >> key.properties
+        echo "keyAlias=${{ env.inputs.key-alias }}" >> key.properties
+        echo "keyPassword=${{ env.inputs.key-pass }}" >> key.properties
       working-directory: ${{ env.inputs.working-directory }}/android
     
     - name: Build APK
