@@ -1,0 +1,67 @@
+name: build
+description: Build Android and iOS
+inputs:
+  working-directory:
+    description: The root directory of the flutter app within this repository
+    default: ./  
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check java found
+      id: check_java
+      shell: bash
+      run: |
+        if java --version; then
+            echo "installed=true" >> "$GITHUB_OUTPUT"
+        else
+            echo "installed=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Install java
+      if: steps.check_java.outputs.installed == 'false'
+      uses: actions/setup-java@v3
+      with:
+        distribution: "zulu"
+        java-version: "17.x"
+        cache: "gradle"
+
+    - name: Check flutter found
+      id: check_flutter
+      shell: bash
+      run: |
+        if flutter --version; then
+            echo "installed=true" >> "$GITHUB_OUTPUT"
+        else
+            echo "installed=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Setup flutter
+      if: steps.check_flutter.outputs.installed == 'false'
+      uses: subosito/flutter-action@v2
+      with:
+        channel: "stable"
+        cache: true
+
+    - run: flutter --version
+      shell: bash
+          
+    - name: Decode keystore and create jks and properties file for signing the app
+      shell: bash
+      run: |
+        echo "${{ secrets.ANDROID_SIGNING_KEY }}" | base64 --decode > app/keystore.jks
+        echo "storeFile=keystore.jks" >> key.properties
+        echo "storePassword=${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}" >> key.properties
+        echo "keyAlias=${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}" >> key.properties
+        echo "keyPassword=${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}" >> key.properties
+      working-directory: ${{ env.inputs.working-directory }}/android
+    
+    - name: Build APK
+      run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose
+      shell: bash
+      working-directory: ${{ env.inputs.working-directory }}
+        
+    - name: Build AAB
+      run: flutter build appbundle --dart-define release=google-play
+      shell: bash
+      working-directory: ${{ env.inputs.working-directory }}
