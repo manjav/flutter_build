@@ -23,7 +23,7 @@ jobs:
       - name: Test1
         run: echo $PROJECT_VERSION
       - name: Check equal version
-        run: echo "IS_EQUAL=${{ startsWith(PROJECT_VERSION, GITHUB_REF_NAME) }}" >> $GITHUB_ENV
+        run: echo IS_EQUAL= startsWith($PROJECT_VERSION, $GITHUB_REF_NAME) >> $GITHUB_ENV
       - name: Test2
         run: echo $IS_EQUAL
     
