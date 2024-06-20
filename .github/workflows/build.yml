@@ -5,12 +5,6 @@ on:
     - 'v[0-9]+*' 
 
 jobs:
-  check:
-    steps:
-      - id: early
-        name: Early exit
-        run: # exit_with_success
-
   build:
     name: build
     permissions: write-all
@@ -30,7 +24,7 @@ jobs:
         run: echo "${{ steps.yq.outputs.result }} $GITHUB_REF_NAME"
 
       - name: Check equals tag with version
-        if:  ${{ result.status == 'false' }})
+        if:  ${{ result.status == 'false' }}
         run: echo pubspec version and tag version must be equal
 
       - name: Push to Releases
