@@ -16,6 +16,9 @@ inputs:
   key-pass:
     description: "The password for the store  used to sign the app"
     required: true
+  build-apk:
+    description: "Build APKs for internal releases"
+    default: true
 
 runs:
   using: "composite"
@@ -57,7 +60,7 @@ runs:
 
     - run: flutter --version
       shell: bash
-          
+
     - name: Decode keystore and create jks and properties file for signing the app
       shell: bash
       run: |
@@ -67,12 +70,13 @@ runs:
         echo "keyAlias=${{ inputs.key-alias }}" >> key.properties
         echo "keyPassword=${{ inputs.key-pass }}" >> key.properties
       working-directory: ${{ inputs.working-directory }}/android
-    
+
     - name: Build APK
+      if: ${{ inputs.build-apk }}
       run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose
       shell: bash
       working-directory: ${{ inputs.working-directory }}
-        
+
     - name: Build AAB
       run: flutter build appbundle --dart-define release=google-play
       shell: bash
