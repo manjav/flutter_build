@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 android {
-    namespace = "com.lifetalk.learn.language.speak"
+    namespace = "com.lifetalk.learn.language.speaks"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -42,7 +42,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.lifetalk.learn.language.speak"
+        applicationId = "com.lifetalk.learn.language.speaks"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
@@ -75,3 +75,6 @@ android {
 flutter {
     source = "../.."
 }
+
+
+implementation 'com.google.android.play:integrity:1.3.0'
