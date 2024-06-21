@@ -35,5 +35,5 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
           packageName: com.lifetalk.learn.language.speaks
           releaseFiles: ./build/app/outputs/bundle/release/app-release.aab
-          track: qa
+          track: internal
           status: completed
