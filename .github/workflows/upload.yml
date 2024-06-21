@@ -5,20 +5,20 @@ on:
     - 'u[0-9]+*' 
 
 jobs:
-  # build:
-  #   name: build
-  #   permissions: write-all
-  #   runs-on: ubuntu-latest
-  #   steps:
+  build:
+    name: build
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
 
-  #     # - uses: actions/checkout@v3
-  #     - uses: ./.github/actions/build
-  #       with:
-  #         store-base64: ${{ secrets.ANDROID_SIGNING_KEY }}
-  #         store-pass: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
-  #         key-alias: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
-  #         key-pass: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
-  #         build-apk: false
+      # - uses: actions/checkout@v3
+      - uses: ./.github/actions/build
+        with:
+          store-base64: ${{ secrets.ANDROID_SIGNING_KEY }}
+          store-pass: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
+          key-alias: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
+          key-pass: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
+          build-apk: false
  
   upload:
     name: Upload app to internal track
