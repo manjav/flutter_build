@@ -6,12 +6,11 @@ on:
 
 jobs:
   build:
-    name: build
+    name: Build Android and iOS release
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
-
-      # - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/build
         with:
           store-base64: ${{ secrets.ANDROID_SIGNING_KEY }}
