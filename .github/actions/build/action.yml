@@ -61,19 +61,19 @@ runs:
     - name: Decode keystore and create jks and properties file for signing the app
       shell: bash
       run: |
-        echo "${{ env.inputs.store-base64 }}" | base64 --decode > app/keystore.jks
+        echo "${{ inputs.store-base64 }}" | base64 --decode > app/keystore.jks
         echo "storeFile=keystore.jks" >> key.properties
-        echo "storePassword=${{ env.inputs.store-pass }}" >> key.properties
-        echo "keyAlias=${{ env.inputs.key-alias }}" >> key.properties
-        echo "keyPassword=${{ env.inputs.key-pass }}" >> key.properties
-      working-directory: ${{ env.inputs.working-directory }}/android
+        echo "storePassword=${{ inputs.store-pass }}" >> key.properties
+        echo "keyAlias=${{ inputs.key-alias }}" >> key.properties
+        echo "keyPassword=${{ inputs.key-pass }}" >> key.properties
+      working-directory: ${{ inputs.working-directory }}/android
     
     - name: Build APK
       run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose
       shell: bash
-      working-directory: ${{ env.inputs.working-directory }}
+      working-directory: ${{ inputs.working-directory }}
         
     - name: Build AAB
       run: flutter build appbundle --dart-define release=google-play
       shell: bash
-      working-directory: ${{ env.inputs.working-directory }}
+      working-directory: ${{ inputs.working-directory }}
