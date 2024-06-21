@@ -21,7 +21,7 @@ jobs:
  
   upload:
     name: Upload app to internal track
-    # needs: [build]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       # - uses: actions/checkout@v3
