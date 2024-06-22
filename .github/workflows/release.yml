@@ -28,24 +28,23 @@ jobs:
           key-alias: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
           key-pass: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
 
-      # - name: Test1
-      #   shell: bash
-      #   run: |
-      #     if startsWith($PROJECT_VERSION, $GITHUB_REF_NAME) then
-      #       echo "IS_EQUAL=true" >> $GITHUB_ENV
-      #     else
-      #       echo "IS_EQUAL=false" >> $GITHUB_ENV
-      #     fi
-      
-      # - name: Test2
-      #   run: echo $IS_EQUAL
-    
-      # VERSIONS_EQUAL: ${{ startsWith("v${{ steps.yq.outputs.result }}", $GITHUB_REF_NAME) }}
-      # run: echo "${{ steps.yq.outputs.result }} $GITHUB_REF_NAME"
+      - name: Get version  
+        id: read-version
+        uses: NiklasLehnfeld/flutter-version-number-action@main
+        with:
+          file-path: pubspec.yaml
 
-      # - name: Check equals tag with version
-      #   if: ${{ steps.equal.result == 'false' }}
-      #   run: "echo pubspec version and tag version must be equal "${{ steps.equal.result }}"
+      - name: Get the tag and remove the first character
+        id: get_tag
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          TAG_WITHOUT_FIRST_CHAR=${TAG:1}
+          echo "TAG_WITHOUT_FIRST_CHAR=$TAG_WITHOUT_FIRST_CHAR" >> $GITHUB_ENV
+
+      - uses: nick-invision/assert-action@v1
+        with:
+          expected: ${{ env.TAG_WITHOUT_FIRST_CHAR }}
+          actual: ${{ steps.read-version.outputs.version-number }}
 
       - name: Push to Releases
         uses: ncipollo/release-action@v1
