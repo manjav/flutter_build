@@ -21,18 +21,6 @@ jobs:
           provisioning-profile-base64: ${{ secrets.IOS_MOBILE_PROVISIONING_PROFILE_BASE64 }}
           keychain-password: ${{ secrets.IOS_GITHUB_KEYCHAIN_PASSWORD }}
 
-      - name: Display Files Structure
-        run: |
-          ls -l
-
-      - name: Display Files Structure 2
-        run: |
-          ls -l build
-
-      - name: Display Files Structure 3
-        run: |
-          ls -l ./build
-
       - name: Upload application
         uses: actions/upload-artifact@v3
         with:
@@ -46,10 +34,10 @@ jobs:
       #     # Try running the build locally with the build command to be sure of this path
       #     path: build/ios/ipa/flutter_build.ipa
           
-      # - name: Upload iOS app to TestFlight
-        # uses: apple-actions/upload-testflight-build@v1
-        # with: 
-        #   app-path: build/ios/ipa/flutter_build.ipa 
-        #   issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
-        #   api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
-        #   api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+      - name: Upload iOS app to TestFlight
+        uses: apple-actions/upload-testflight-build@v1
+        with: 
+          app-path: build/ios/ipa/flutter_build.ipa 
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
