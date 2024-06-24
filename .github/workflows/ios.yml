@@ -22,6 +22,8 @@ jobs:
 
       - name: Display Files Structure
         run: |
+          ls -l 
+          ls -l ./
           ls -l ./build/ios/ipa
 
       - name: Upload application
