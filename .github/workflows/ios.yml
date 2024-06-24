@@ -23,7 +23,8 @@ jobs:
 
       - name: Display Files Structure
         run: |
-          ls -l build
+          cd build
+          ls -l
 
       - name: Upload application
         uses: actions/upload-artifact@v3
