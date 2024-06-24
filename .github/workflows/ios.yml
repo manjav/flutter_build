@@ -22,14 +22,13 @@ jobs:
 
       - name: Display Files Structure
         run: |
-          ls -l build/ios/ipa
           ls -l ./build/ios/ipa
 
       - name: Upload application
         uses: actions/upload-artifact@v3
         with:
           name: release.ipa
-          path: build/ios/ipa/flutter_build.ipa
+          path: ./build/ios/ipa/flutter_build.ipa
 
       # - name: Archive IPA
       #   uses: actions/upload-artifact@v2
