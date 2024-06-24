@@ -21,9 +21,9 @@ jobs:
           keychain-password: ${{ secrets.IOS_GITHUB_KEYCHAIN_PASSWORD }}
 
       - name: Display Files Structure
-      run: |
-        ls -l build/ios/ipa
-        ls -l ./build/ios/ipa
+        run: |
+          ls -l build/ios/ipa
+          ls -l ./build/ios/ipa
 
       - name: Upload application
         uses: actions/upload-artifact@v3
