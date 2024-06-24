@@ -7,6 +7,7 @@ on:
 jobs:
   build:
     name: Build iOS App
+    permissions: write-all
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
