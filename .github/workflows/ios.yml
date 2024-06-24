@@ -20,10 +20,15 @@ jobs:
           provisioning-profile-base64: ${{ secrets.IOS_MOBILE_PROVISIONING_PROFILE_BASE64 }}
           keychain-password: ${{ secrets.IOS_GITHUB_KEYCHAIN_PASSWORD }}
 
+      - name: Display Files Structure
+      run: |
+        ls -l build/ios/ipa
+        ls -l ./build/ios/ipa
+
       - name: Upload application
         uses: actions/upload-artifact@v3
         with:
-          name: release-ipa
+          name: release.ipa
           path: build/ios/ipa/flutter_build.ipa
 
       # - name: Archive IPA
