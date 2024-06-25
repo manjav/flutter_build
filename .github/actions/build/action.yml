@@ -19,6 +19,24 @@ inputs:
   build-apk:
     description: "Build APKs for internal releases"
     default: true
+  build-aab:
+    description: "Build AAB for Playstore"
+    default: true
+  build-ios:
+    description: "Build iOS and upload to TestFlight"
+    default: true
+  ios-app-path:
+    description: "iOS App path"
+    required: false
+  appstore-issuer-id:
+    description: "AppStore Issuer id"
+    required: false
+  appstore-api-key-id:
+    description: "AppStore API key"
+    required: false
+  appstore-api-private-key:
+    description: "AppStore API private key"
+    required: false
 
 runs:
   using: "composite"
@@ -78,6 +96,27 @@ runs:
       working-directory: ${{ inputs.working-directory }}
 
     - name: Build AAB
+      if: ${{ inputs.build-aab }}
       run: flutter build appbundle --dart-define release=google-play
       shell: bash
       working-directory: ${{ inputs.working-directory }}
+
+    - name: Build iOS App
+      if: ${{ inputs.build-ios }}
+      uses: cedvdb/action-flutter-build-ios@v1
+      with:
+        # always use --export-options-plist=ios/GithubActionsExportOptions.plist
+        build-cmd: flutter build ipa --release --export-options-plist=ios/GithubActionsExportOptions.plist
+        certificate-base64: ${{ secrets.IOS_BUILD_CERTIFICATE_BASE64 }}
+        certificate-password: ${{ secrets.IOS_BUILD_CERTIFICATE_PASSWORD }}
+        provisioning-profile-base64: ${{ secrets.IOS_MOBILE_PROVISIONING_PROFILE_BASE64 }}
+        keychain-password: ${{ secrets.IOS_GITHUB_KEYCHAIN_PASSWORD }}
+
+    - name: Upload iOS app to TestFlight
+      if: ${{ inputs.build-ios }}
+      uses: apple-actions/upload-testflight-build@v1
+      with: 
+        app-path: ${{ inputs.ios-app-path }}
+        issuer-id: ${{ inputs.appstore-issuer-id }}
+        api-key-id: ${{ inputs.appstore-api-key-id }}
+        api-private-key: ${{ inputs.appstore-api-private-key }}
