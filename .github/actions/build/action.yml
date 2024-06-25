@@ -37,18 +37,6 @@ inputs:
   ios-keychain-password:
     description: "iOS Keychain Password"
     required: false
-  ios-app-path:
-    description: "iOS App path"
-    required: false
-  appstore-issuer-id:
-    description: "AppStore Issuer id"
-    required: false
-  appstore-api-key-id:
-    description: "AppStore API key"
-    required: false
-  appstore-api-private-key:
-    description: "AppStore API private key"
-    required: false
 
 runs:
   using: "composite"
@@ -101,19 +89,19 @@ runs:
         echo "keyPassword=${{ inputs.key-pass }}" >> key.properties
       working-directory: ${{ inputs.working-directory }}/android
 
-    - name: Build APK
+    - name: Build apk
       if: ${{ inputs.build-apk }}
       run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose
       shell: bash
       working-directory: ${{ inputs.working-directory }}
 
-    - name: Build AAB
+    - name: Build aab
       if: ${{ inputs.build-aab }}
       run: flutter build appbundle --dart-define release=google-play
       shell: bash
       working-directory: ${{ inputs.working-directory }}
 
-    - name: Build iOS App
+    - name: Build ipa
       if: ${{ inputs.build-ios }}
       uses: cedvdb/action-flutter-build-ios@v1
       with:
@@ -123,12 +111,3 @@ runs:
         certificate-password: ${{ inputs.ios-certificate-password }}
         provisioning-profile-base64: ${{ inputs.ios-provisioning-profile-base64 }}
         keychain-password: ${{ inputs.ios-keychain-password }}
-
-    - name: Upload iOS app to TestFlight
-      if: ${{ inputs.build-ios }}
-      uses: apple-actions/upload-testflight-build@v1
-      with: 
-        app-path: ${{ inputs.ios-app-path }}
-        issuer-id: ${{ inputs.appstore-issuer-id }}
-        api-key-id: ${{ inputs.appstore-api-key-id }}
-        api-private-key: ${{ inputs.appstore-api-private-key }}

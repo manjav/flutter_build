@@ -20,17 +20,22 @@ jobs:
           ios-certificate-base64: ${{ secrets.IOS_BUILD_CERTIFICATE_BASE64 }}
           ios-certificate-password: ${{ secrets.IOS_BUILD_CERTIFICATE_PASSWORD }}
           ios-provisioning-profile-base64: ${{ secrets.IOS_MOBILE_PROVISIONING_PROFILE_BASE64 }}
-          ios-keychain-password: ${{ secrets.IOS_GITHUB_KEYCHAIN_PASSWORD }}
-          appstore-issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
-          appstore-api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
-          appstore-api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
-          ios-app-path: build/ios/ipa/flutter_build.ipa
           build-apk: false
+          build-aab: false
 
-      - uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
-          packageName: com.lifetalk.learn.language.speaks
-          releaseFiles: ./build/app/outputs/bundle/release/app-release.aab
-          track: internal
-          status: draft
+      # - uses: r0adkll/upload-google-play@v1
+      #   with:
+      #     serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
+      #     packageName: com.lifetalk.learn.language.speaks
+      #     releaseFiles: ./build/app/outputs/bundle/release/app-release.aab
+      #     track: internal
+      #     status: draft
+
+
+      - name: Upload iOS app to TestFlight
+        uses: apple-actions/upload-testflight-build@v1
+        with: 
+          app-path: build/ios/ipa/flutter_build.ipa
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
