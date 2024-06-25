@@ -21,7 +21,7 @@ jobs:
           ios-certificate-password: ${{ secrets.IOS_BUILD_CERTIFICATE_PASSWORD }}
           ios-provisioning-profile-base64: ${{ secrets.IOS_MOBILE_PROVISIONING_PROFILE_BASE64 }}
           build-apk: false
-          build-aab: false
+          # build-aab: false
 
       # - uses: r0adkll/upload-google-play@v1
       #   with:
@@ -32,10 +32,10 @@ jobs:
       #     status: draft
 
 
-      - name: Upload iOS app to TestFlight
-        uses: apple-actions/upload-testflight-build@v1
-        with: 
-          app-path: build/ios/ipa/flutter_build.ipa
-          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
-          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
-          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+      # - name: Upload iOS app to TestFlight
+      #   uses: apple-actions/upload-testflight-build@v1
+      #   with: 
+      #     app-path: build/ios/ipa/flutter_build.ipa
+      #     issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+      #     api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+      #     api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
