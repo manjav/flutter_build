@@ -55,8 +55,8 @@ runs:
       if: steps.check_java.outputs.installed == 'false'
       uses: actions/setup-java@v3
       with:
-        distribution: "zulu"
-        java-version: "17.x"
+        distribution: "adopt"
+        java-version: "17"
         cache: "gradle"
 
     - name: Check flutter found
