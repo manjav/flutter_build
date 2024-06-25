@@ -17,6 +17,10 @@ jobs:
           store-pass: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
           key-alias: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
           key-pass: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
+          ios-certificate-base64: ${{ secrets.IOS_BUILD_CERTIFICATE_BASE64 }}
+          ios-certificate-password: ${{ secrets.IOS_BUILD_CERTIFICATE_PASSWORD }}
+          ios-provisioning-profile-base64: ${{ secrets.IOS_MOBILE_PROVISIONING_PROFILE_BASE64 }}
+          ios-keychain-password: ${{ secrets.IOS_GITHUB_KEYCHAIN_PASSWORD }}
           appstore-issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           appstore-api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
           appstore-api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
