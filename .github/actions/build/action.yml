@@ -56,7 +56,7 @@ runs:
       uses: actions/setup-java@v3
       with:
         distribution: "adopt"
-        java-version: "19"
+        java-version: "17"
         cache: "gradle"
 
     - name: Check flutter found
@@ -73,7 +73,7 @@ runs:
       if: steps.check_flutter.outputs.installed == 'false'
       uses: subosito/flutter-action@v2
       with:
-        channel: "stable"
+        flutter-version: '3.19.3'
         cache: true
 
     - run: flutter --version
