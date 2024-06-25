@@ -55,7 +55,7 @@ runs:
       if: steps.check_java.outputs.installed == 'false'
       uses: actions/setup-java@v3
       with:
-        distribution: "adopt"
+        distribution: 'temurin'
         java-version: "17.0.7"
         cache: "gradle"
 
