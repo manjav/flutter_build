@@ -25,6 +25,18 @@ inputs:
   build-ios:
     description: "Build iOS and upload to TestFlight"
     default: true
+  ios-certificate-base64:
+    description: "iOS Certificate Base64"
+    required: false
+  ios-certificate-password:
+    description: "iOS Certificate Password"
+    required: false
+  ios-provisioning-profile-base64:
+    description: "iOS Provisioning Base64"
+    required: false
+  ios-keychain-password:
+    description: "iOS Keychain Password"
+    required: false
   ios-app-path:
     description: "iOS App path"
     required: false
@@ -107,10 +119,10 @@ runs:
       with:
         # always use --export-options-plist=ios/GithubActionsExportOptions.plist
         build-cmd: flutter build ipa --release --export-options-plist=ios/GithubActionsExportOptions.plist
-        certificate-base64: ${{ secrets.IOS_BUILD_CERTIFICATE_BASE64 }}
-        certificate-password: ${{ secrets.IOS_BUILD_CERTIFICATE_PASSWORD }}
-        provisioning-profile-base64: ${{ secrets.IOS_MOBILE_PROVISIONING_PROFILE_BASE64 }}
-        keychain-password: ${{ secrets.IOS_GITHUB_KEYCHAIN_PASSWORD }}
+        certificate-base64: ${{ inputs.ios-certificate-base64 }}
+        certificate-password: ${{ inputs.ios-certificate-password }}
+        provisioning-profile-base64: ${{ inputs.ios-provisioning-profile-base64 }}
+        keychain-password: ${{ inputs.ios-keychain-password }}
 
     - name: Upload iOS app to TestFlight
       if: ${{ inputs.build-ios }}
