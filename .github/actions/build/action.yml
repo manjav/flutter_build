@@ -76,6 +76,9 @@ runs:
         flutter-version: '3.22.2'
         cache: true
 
+    - run: flutter doctor --v
+      shell: bash
+
     - run: flutter --version
       shell: bash
 
