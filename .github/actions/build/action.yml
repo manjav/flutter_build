@@ -22,7 +22,7 @@ inputs:
   build-aab:
     description: "Build AAB for Playstore"
     default: true
-  build-ios:
+  build-ipa:
     description: "Build iOS and upload to TestFlight"
     default: true
   ios-certificate-base64:
@@ -105,7 +105,7 @@ runs:
       working-directory: ${{ inputs.working-directory }}
 
     - name: Build ipa
-      if: inputs.build-ios == 'true'
+      if: inputs.build-ipa == 'true'
       uses: cedvdb/action-flutter-build-ios@v1
       with:
         # always use --export-options-plist=ios/GithubActionsExportOptions.plist

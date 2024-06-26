@@ -28,7 +28,7 @@ jobs:
           key-alias: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
           key-pass: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
           # build-aab: false
-          # build-ios: false
+          # build-ipa: false
 
       # - name: Test1
       #   shell: bash
