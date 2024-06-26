@@ -93,7 +93,7 @@ runs:
       working-directory: ${{ inputs.working-directory }}/android
 
     - name: Build apk
-      if: inputs.build-apk == 'true'
+      # if: inputs.build-apk  == 'true'
       run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose
       shell: bash
       working-directory: ${{ inputs.working-directory }}
