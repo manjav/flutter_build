@@ -76,10 +76,10 @@ runs:
         flutter-version: '3.22.2'
         cache: true
 
-    - run: flutter doctor --v
+    - run: flutter doctor -v
       shell: bash
 
-    - run: flutter -version
+    - run: flutter --version
       shell: bash
 
     - name: Decode keystore and create jks and properties file for signing the app
