@@ -19,6 +19,24 @@ inputs:
   build-apk:
     description: "Build APKs for internal releases"
     default: true
+  build-aab:
+    description: "Build AAB for Playstore"
+    default: true
+  build-ipa:
+    description: "Build iOS and upload to TestFlight"
+    default: true
+  ios-certificate-base64:
+    description: "iOS Certificate Base64"
+    required: false
+  ios-certificate-password:
+    description: "iOS Certificate Password"
+    required: false
+  ios-provisioning-profile-base64:
+    description: "iOS Provisioning Base64"
+    required: false
+  ios-keychain-password:
+    description: "iOS Keychain Password"
+    required: false
 
 runs:
   using: "composite"
@@ -37,8 +55,8 @@ runs:
       if: steps.check_java.outputs.installed == 'false'
       uses: actions/setup-java@v3
       with:
-        distribution: "zulu"
-        java-version: "17.x"
+        distribution: "adopt"
+        java-version: "21"
         cache: "gradle"
 
     - name: Check flutter found
@@ -55,8 +73,11 @@ runs:
       if: steps.check_flutter.outputs.installed == 'false'
       uses: subosito/flutter-action@v2
       with:
-        channel: "stable"
+        channel: stable
         cache: true
+
+    # - run: flutter doctor -v
+    #   shell: bash
 
     - run: flutter --version
       shell: bash
@@ -71,13 +92,25 @@ runs:
         echo "keyPassword=${{ inputs.key-pass }}" >> key.properties
       working-directory: ${{ inputs.working-directory }}/android
 
-    - name: Build APK
-      if: ${{ inputs.build-apk }}
+    - name: Build apk
+      if: inputs.build-apk  == 'true'
       run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose
       shell: bash
       working-directory: ${{ inputs.working-directory }}
 
-    - name: Build AAB
+    - name: Build aab
+      if: inputs.build-aab == 'true'
       run: flutter build appbundle --dart-define release=google-play
       shell: bash
       working-directory: ${{ inputs.working-directory }}
+
+    - name: Build ipa
+      if: inputs.build-ipa == 'true'
+      uses: cedvdb/action-flutter-build-ios@v1
+      with:
+        # always use --export-options-plist=ios/GithubActionsExportOptions.plist
+        build-cmd: flutter build ipa --release --export-options-plist=ios/GithubActionsExportOptions.plist
+        certificate-base64: ${{ inputs.ios-certificate-base64 }}
+        certificate-password: ${{ inputs.ios-certificate-password }}
+        provisioning-profile-base64: ${{ inputs.ios-provisioning-profile-base64 }}
+        keychain-password: ${{ inputs.ios-keychain-password }}

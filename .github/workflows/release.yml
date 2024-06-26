@@ -2,7 +2,7 @@ name: Release Tag
 on:
   push:
     tags:
-    - 'r[0-9]+*' 
+    - 'r[0-9]+.[0-9]+.[0-9]+*'
 
 jobs:
   release:
@@ -27,6 +27,8 @@ jobs:
           store-pass: ${{ secrets.ANDROID_SIGNING_STORE_PASSWORD }}
           key-alias: ${{ secrets.ANDROID_SIGNING_KEY_ALIAS }}
           key-pass: ${{ secrets.ANDROID_SIGNING_KEY_PASSWORD }}
+          # build-aab: false
+          # build-ipa: false
 
       # - name: Test1
       #   shell: bash
@@ -51,4 +53,4 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "./build/app/outputs/apk/release/*.apk,./build/app/outputs/bundle/release/app-release.aab"
-          tag: $GITHUB_REF_NAME
+          tag: ${{ github.ref_name }}
