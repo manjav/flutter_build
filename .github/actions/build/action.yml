@@ -82,21 +82,21 @@ runs:
     - run: flutter --version
       shell: bash
 
-    # - name: Decode keystore and create jks and properties file for signing the app
-    #   shell: bash
-    #   run: |
-    #     echo "${{ inputs.store-base64 }}" | base64 --decode > app/keystore.jks
-    #     echo "storeFile=keystore.jks" >> key.properties
-    #     echo "storePassword=${{ inputs.store-pass }}" >> key.properties
-    #     echo "keyAlias=${{ inputs.key-alias }}" >> key.properties
-    #     echo "keyPassword=${{ inputs.key-pass }}" >> key.properties
-    #   working-directory: ${{ inputs.working-directory }}/android
+    - name: Decode keystore and create jks and properties file for signing the app
+      shell: bash
+      run: |
+        echo "${{ inputs.store-base64 }}" | base64 --decode > app/keystore.jks
+        echo "storeFile=keystore.jks" >> key.properties
+        echo "storePassword=${{ inputs.store-pass }}" >> key.properties
+        echo "keyAlias=${{ inputs.key-alias }}" >> key.properties
+        echo "keyPassword=${{ inputs.key-pass }}" >> key.properties
+      working-directory: ${{ inputs.working-directory }}/android
 
-    # - name: Build apk
-    #   if: inputs.build-apk == 'true'
-    #   run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose
-    #   shell: bash
-    #   working-directory: ${{ inputs.working-directory }}
+    - name: Build apk
+      if: inputs.build-apk == 'true'
+      run: flutter build apk --release --target-platform android-arm,android-arm64 --split-per-abi --verbose
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
 
     # - name: Build aab
     #   if: inputs.build-aab == 'true'
