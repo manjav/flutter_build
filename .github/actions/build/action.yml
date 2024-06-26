@@ -79,7 +79,7 @@ runs:
     - run: flutter doctor --v
       shell: bash
 
-    - run: flutter --version
+    - run: flutter -version
       shell: bash
 
     - name: Decode keystore and create jks and properties file for signing the app
