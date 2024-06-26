@@ -8,7 +8,7 @@ jobs:
   build:
     name: Build Android and iOS release
     permissions: write-all
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/build
@@ -21,7 +21,7 @@ jobs:
           ios-certificate-password: ${{ secrets.IOS_BUILD_CERTIFICATE_PASSWORD }}
           ios-provisioning-profile-base64: ${{ secrets.IOS_MOBILE_PROVISIONING_PROFILE_BASE64 }}
           build-apk: false
-          # build-aab: false
+          build-ipa: false
 
       # - uses: r0adkll/upload-google-play@v1
       #   with:
