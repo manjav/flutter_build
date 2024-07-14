@@ -1,4 +1,4 @@
-name: Release
+name: Build and release new version
 on:
   push:
     tags:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   release:
-    name: release
+    name: build_release
     permissions: write-all
     runs-on: macos-latest
     steps:
