@@ -1,8 +1,8 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
+    // id "com.google.gms.google-services"
 }
 
 // Local Properties
@@ -13,17 +13,39 @@ if (localPropertiesFile.exists()) {
         localProperties.load(reader)
     }
 }
-
 def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
 if (flutterVersionCode == null) {
     flutterVersionCode = "1"
 }
-
 def flutterVersionName = localProperties.getProperty("flutter.versionName")
 if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
 
+// SDK Properties
+def sdkProperties = new Properties()
+def sdkPropertiesFile = rootProject.file('sdk.properties')
+if (sdkPropertiesFile.exists()) {
+    sdkPropertiesFile.withReader('UTF-8') { reader ->
+        sdkProperties.load(reader)
+    }
+}
+def minSdkVersion = sdkProperties.getProperty('minSdkVersion').toInteger()
+if (minSdkVersion == null) {
+    throw new GradleException("minSdkVersion not found in sdk.properties")
+}
+def targetSdkVersion = sdkProperties.getProperty('targetSdkVersion').toInteger()
+if (targetSdkVersion == null) {
+    throw new GradleException("targetSdkVersion not found in sdk.properties")
+}
+def compileSdkVersion = sdkProperties.getProperty('compileSdkVersion').toInteger()
+if (compileSdkVersion == null) {
+    throw new GradleException("compileSdkVersion not found in sdk.properties")
+}
+def ndkVersionName = sdkProperties.getProperty('ndkVersion')
+if (ndkVersionName == null) {
+    throw new GradleException("ndkVersion not found in sdk.properties")
+}
 
 // Keystore Properties
 def keystoreProperties = new Properties()
@@ -33,9 +55,8 @@ if (keystorePropertiesFile.exists()) {
 }
 android {
     namespace = "com.lifetalk.learn.language.speaks"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
-
+    ndkVersion = ndkVersionName
+    compileSdk = compileSdkVersion
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -43,8 +64,8 @@ android {
 
     defaultConfig {
         applicationId = "com.lifetalk.learn.language.speaks"
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = minSdkVersion
+        targetSdk = targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
@@ -57,21 +78,23 @@ android {
            storePassword keystoreProperties["storePassword"]
        }
     }
-
+    
     buildTypes {
         release {
-            minifyEnabled = true
-            shrinkResources = true
+            minifyEnabled true
+            shrinkResources true
             // proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            signingConfig = signingConfigs.release 
+            signingConfig signingConfigs.release 
         }
         debug
         {
-            signingConfig = signingConfigs.release 
+            signingConfig signingConfigs.release 
         }
     }
 }
 
 flutter {
-    source = "../.."
+    source '../..'
 }
+
+dependencies {}
